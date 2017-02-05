@@ -1,0 +1,30 @@
+{
+    "name": "darsyn/obfuscate",
+    "description": "Obfuscate PHP source files with basic XOR encryption in userland code",
+    "authors": [
+        {
+            "name": "Zander Baldwin",
+            "email": "hello@zanderbaldwin.com",
+            "homepage": "https://github.com/zanderbaldwin"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Darsyn\\Obfuscate\\": "src/"
+        }
+    },
+    "require": {
+        "goaop/framework": "@stable",
+        "php": ">=7.0"
+    },
+    "bin": [
+        "bin/obfuscate"
+    ],
+    "autoload-dev": {
+        "psr-4": {
+            "Darsyn\\Obfuscate\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+    }
+}

@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+namespace Darsyn\Obfuscate;
+
+function xorLoadAutoloader(array $vendorLocations)
+{
+    foreach ($vendorLocations as $vendorLocation) {
+        if (file_exists($composer = $vendorLocation . '/autoload.php')) {
+            return require_once $composer;
+        }
+    }
+    throw new \RuntimeException('Could not load Composer Autoloader. Please install dependencies.');
+}
+
+$loader = xorLoadAutoloader([
+    __DIR__ . '/../vendor',
+    __DIR__ . '/../../..',
+    __DIR__ . '/vendor',
+]);
+new Obfuscate;
