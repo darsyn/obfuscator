@@ -13,7 +13,10 @@ class Obfuscate
 
     public function __construct(TransformerInterface $transformer = null)
     {
-        $transformer = $transformer ?: new ObfuscateTransformer(static::KEY, static::DEFAULT_PREAMBLE);
+        $transformer = $transformer ?: new ObfuscateTransformer(
+            static::DEFAULT_KEY,
+            static::DEFAULT_PREAMBLE
+        );
         ObfuscateFilter::register($transformer);
     }
 }
