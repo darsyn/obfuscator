@@ -66,15 +66,6 @@ class ObfuscateCommand extends Command
             : $transformer->encrypt($contents)
         );
     }
-    
-    public function findFiles(string $files): \IteratorAggregate
-    {
-        return (new Finder)
-            ->in($this->cwd . '/' . $files)
-            ->ignoreUnreadableDirs()
-            ->files()
-            ->name('*.php');
-    }
 }
 
 $application = new \Symfony\Component\Console\Application('Obfuscate');
