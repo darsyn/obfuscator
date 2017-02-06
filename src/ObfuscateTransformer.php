@@ -35,6 +35,7 @@ class ObfuscateTransformer implements SourceTransformer, ObfuscateInterface
             static::LINE_ENDING
         );
     }
+
     public function decrypt(string $source): string
     {
         if (!$this->isObfuscated($source)) {
@@ -50,7 +51,7 @@ class ObfuscateTransformer implements SourceTransformer, ObfuscateInterface
     {
         $metadata->source = $this->decrypt($metadata->source);
     }
-    
+
     private function isObfuscated(string $source): bool
     {
         return substr($source, 0, $this->preambleLength) === $this->preamble;

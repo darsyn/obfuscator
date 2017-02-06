@@ -1,6 +1,6 @@
 {
-    "name": "darsyn/obfuscate",
-    "description": "Obfuscate PHP source files with basic XOR encryption in userland code",
+    "name": "darsyn/obfuscator",
+    "description": "Obfuscate PHP source files with basic XOR encryption in userland code at runtime.",
     "authors": [
         {
             "name": "Zander Baldwin",
