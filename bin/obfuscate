@@ -1,7 +1,14 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
 
-namespace Darsyn\Obfuscate;
+use Darsyn\Obfuscate\Obfuscate;
+use Darsyn\Obfuscate\ObfuscateTransformer;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
 
 function xorLoadAutoloader(array $vendorLocations)
 {
@@ -18,4 +25,50 @@ $loader = xorLoadAutoloader([
     __DIR__ . '/../../..',
     __DIR__ . '/vendor',
 ]);
-new Obfuscate;
+
+class ObfuscateCommand extends Command
+{
+    /** @var string $cwd */
+    private $cwd;
+
+    public function __construct(string $cwd)
+    {
+        $this->cwd = $cwd;
+        parent::__construct();
+    }
+
+    public function configure()
+    {
+        $this
+            ->setName('obfuscate')
+            ->setDescription('Obfuscate source files.')
+            ->setHelp('This command obfuscates source files with a specified key and preamble.')
+            ->addArgument('file', InputArgument::REQUIRED)
+            ->addOption('key', 'k', InputOption::VALUE_REQUIRED)
+            ->addOption('preamble', 'p', InputOption::VALUE_REQUIRED)
+            ->addOption('undo', null, InputOption::VALUE_NONE);
+    }
+    
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $key = $input->getOption('key') ?: Obfuscate::DEFAULT_KEY;
+        $preamble = $input->getOption('preamble') ?: Obfuscate::DEFAULT_PREAMBLE;
+        $transformer = new ObfuscateTransformer($key, $preamble);
+        if (!file_exists($file = $input->getArgument('file')) || !is_readable($file)) {
+            throw new \InvalidArgumentException(sprintf('Could not open "%s" for obfuscation.', $file));
+        }
+        $contents = file_get_contents($file);
+        if (!is_writable($file)) {
+            throw new \RuntimeException(sprintf('Could not write contents to "%s".', $file));
+        }
+        file_put_contents($file, $input->getOption('undo')
+            ? $transformer->decrypt($contents)
+            : $transformer->encrypt($contents)
+        );
+    }
+}
+
+$application = new \Symfony\Component\Console\Application('Obfuscate');
+$application->add($command = new ObfuscateCommand(getcwd()));
+$application->setDefaultCommand($command->getName(), true);
+$application->run();
