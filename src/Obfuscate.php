@@ -17,10 +17,9 @@ class Obfuscate
         );
         $kernel = new Kernel($transformer);
         $kernel->init(array_merge([
-            'debug' => true,
+            'debug' => false,
             'cacheDir' => null,
-            'includePaths' => [],
-            Kernel::ENABLE_AOP => false,
+            Kernel::ENABLE_AOP => true,
         ], $options));
     }
 }

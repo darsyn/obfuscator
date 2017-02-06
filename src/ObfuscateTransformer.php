@@ -46,9 +46,9 @@ class ObfuscateTransformer implements SourceTransformer, ObfuscateInterface
     }
 
     /** @inheritdoc */
-    public function transform(StreamMetaData $metadata): string
+    public function transform(StreamMetaData $metadata)
     {
-        return $this->decrypt($metadata->source);
+        $metadata->source = $this->decrypt($metadata->source);
     }
     
     private function isObfuscated(string $source): bool

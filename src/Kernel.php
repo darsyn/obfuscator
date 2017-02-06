@@ -4,6 +4,7 @@ namespace Darsyn\Obfuscate;
 
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
+use Go\Instrument\Transformer\CachingTransformer;
 use Go\Instrument\Transformer\SourceTransformer;
 
 class Kernel extends AspectKernel
@@ -25,10 +26,15 @@ class Kernel extends AspectKernel
 
     public function registerTransformers(): array
     {
+        $cachedObfuscateTransformers = [new CachingTransformer($this, function () {
+            return [$this->obfuscateTransformer];
+        }, $this->getContainer()->get('aspect.cache.path.manager'))];
+
         $kernelOptions = $this->getContainer()->get('kernel.options');
         if (isset($kernelOptions[static::ENABLE_AOP]) && $kernelOptions[static::ENABLE_AOP]) {
-            return array_merge([$this->obfuscateTransformer], parent::registerTransformers());
+            return array_merge($cachedObfuscateTransformers, parent::registerTransformers());
         }
-        return parent::registerTransformers();
+
+        return $cachedObfuscateTransformers;
     }
 }
