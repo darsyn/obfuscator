@@ -2,6 +2,14 @@
 
 Obfuscate source code and decrypt it during run-time.
 
+This is **not** designed to securely encrypt source code; merely obfuscate
+source code to ensure that any extraction of partial and/or full source code has
+been done with intent. This can then provide extra evidence in any legal dispute
+you have with said party.
+
+This obfuscation method is a proof-of-concept and is **not efficient**
+performance-wise.
+
 ## Example
 
 ```php
